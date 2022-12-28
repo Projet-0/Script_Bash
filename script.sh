@@ -155,6 +155,9 @@ function_display () {
 
 ## PROBLEME PIP 
 
+## ON SE RAPELLE --exclude="./.*" PERMET D'ENLEVER PAR DEFAUT LES FICHIERS CACHEES desactive si TIRET a. Et SI ON VEUT AFFICHER LES FICHIERS TOUS oN met -a
+
+
 parameter () {
 
 	path='Variable initiale a modifier en fonction des boucles' ;
@@ -162,6 +165,9 @@ parameter () {
 	local="no value";
 	taille="--max-depth=2"
 	global="no value for"
+	#exclude="./.*"
+	# TEST de exclude
+	exclude="[\/]+[.]+"
 
 	while getopts "d:fahsr:o:" OPT; do
 
@@ -192,8 +198,8 @@ parameter () {
             f_p="-a";; # On cible egalement les fichiers
 	a)
             #a_v=${OPTARG}
-	    a_p="" ;
-	    ;; # affiche les fichiers caches
+	    exclude="" ;  
+	    ;; # affiche les fichiers/dossiers caches
 	o)
             #o_p=${OPTARG};; # ecrit dans un fichier
 	#TEST 
@@ -218,10 +224,10 @@ parameter () {
 	  if [[ $@ == *"-r"* ]]; 
 	  then
 	    #COMMANDE A METTRE
-	    global=`du $h_p $d_p $taille | $s_p | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
+	    global=`du $h_p $f_p $d_p $taille | $s_p | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
 	  else 
 	    #COMMANDE A METTRE
-	    global=`du $h_p $d_p $taille | $s_p` # PAS DE REGEX
+	    global=`du $h_p $f_p $d_p $taille | $s_p` # PAS DE REGEX
 	  fi
 
 	  #global=`du $h_p $d_p $taille | $s_p ` ## COMMANDE DE DEPART
@@ -231,10 +237,10 @@ parameter () {
 	  if [[ $@ == *"-r"* ]]; 
 	  then
 	    #COMMANDE A METTRE
-	    global=`du $h_p $d_p $taille | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
+	    global=`du $h_p $f_p $d_p $taille | grep $r_p` # ON CONTIENT LE REGEX
 	  else 
 	    #COMMANDE A METTRE
-	    global=`du $h_p $d_p $taille` # PAS DE REGEX
+	    global=`du $h_p $f_p $d_p $taille` # PAS DE REGEX
 	  fi
 	  #global=`du $h_p $d_p $taille ` ## COMMANDE DE DEPART
 	fi
@@ -272,7 +278,8 @@ parameter () {
 
 }
 
-parameter -s -d $path -h -o here.txt -r "Projet" ;
+# parameter -s -d $path -h -o here.txt -r "Projet" ;
+parameter -s -d $path -h -o here.txt -r "Projet" -f ;
 
 
 # sudo apt-get install pv COMMANDE A FAIRE POUR INSTALLER PV
