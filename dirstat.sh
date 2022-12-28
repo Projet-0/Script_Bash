@@ -13,8 +13,8 @@ parameter () {
 	global="no value for"
 	#exclude="./.*"
 	# TEST de exclude
-	exclude="[\/]+[.]+"
-
+	#exclude="[\/]+[.]+"
+	exclude="*/.*" 
 	while getopts "d:fahsr:o:" OPT; do
 
 	# Je récupère le texte associé à l'option
@@ -44,7 +44,8 @@ parameter () {
             f_p="-a";; # On cible egalement les fichiers
 	a)
             #a_v=${OPTARG}
-	    exclude="" ;  
+	    exclude="()" ;  
+	    echo "Je suis ici"
 	    ;; # affiche les fichiers/dossiers caches
 	o)
             #o_p=${OPTARG};; # ecrit dans un fichier
@@ -70,10 +71,10 @@ parameter () {
 	  if [[ $@ == *"-r"* ]]; 
 	  then
 	    #COMMANDE A METTRE
-	    global=`du $h_p $f_p $d_p $taille | $s_p | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
+	    global=`du $h_p $f_p $d_p $taille --exclude=$exclude | $s_p | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
 	  else 
 	    #COMMANDE A METTRE
-	    global=`du $h_p $f_p $d_p $taille | $s_p` # PAS DE REGEX
+	    global=`du $h_p $f_p $d_p $taille --exclude=$exclude | $s_p` # PAS DE REGEX
 	  fi
 
 	  #global=`du $h_p $d_p $taille | $s_p ` ## COMMANDE DE DEPART
@@ -83,10 +84,10 @@ parameter () {
 	  if [[ $@ == *"-r"* ]]; 
 	  then
 	    #COMMANDE A METTRE
-	    global=`du $h_p $f_p $d_p $taille | grep $r_p` # ON CONTIENT LE REGEX
+	    global=`du $h_p $f_p $d_p $taille --exclude=$exclude | grep $r_p` # ON CONTIENT LE REGEX
 	  else 
 	    #COMMANDE A METTRE
-	    global=`du $h_p $f_p $d_p $taille` # PAS DE REGEX
+	    global=`du $h_p $f_p $d_p $taille --exclude=$exclude ` # PAS DE REGEX
 	  fi
 	  #global=`du $h_p $d_p $taille ` ## COMMANDE DE DEPART
 	fi
