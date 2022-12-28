@@ -163,7 +163,7 @@ parameter () {
 	taille="--max-depth=2"
 	global="no value for"
 
-	while getopts "d:hsr:f:a:o:" OPT; do
+	while getopts "d:fahsro:" OPT; do
 
 	# Je récupère le texte associé à l'option
 	case "${OPT}" in
@@ -189,12 +189,16 @@ parameter () {
 	f)
             f_p="-a";; # On cible egalement les fichiers
 	a)
-            a_v=${OPTARG}
-	    a_p="";
+            #a_v=${OPTARG}
+	    a_p="" ;
 	    ;; # affiche les fichiers caches
 	o)
-            o_p=${OPTARG};; # ecrit dans un fichier
-		
+            #o_p=${OPTARG};; # ecrit dans un fichier
+	#TEST 
+	    o_p=${OPTARG}	
+	    echo "$o_p"
+	    echo "je suis la aussi" 
+	    ;;
         *)
             fourth="Error: ${OPT} is not acceptable";; # argument pas acceptanel
 
@@ -203,13 +207,26 @@ parameter () {
 
 
 	## IL faut tout faire a la fin comme ca je peux faire une grande commande
+
 	
 
+	#SORT AND
 	if [[ $@ == *"-s"* ]]; 
 	then
-	  global=`du $h_p $d_p $taille | $s_p`
+	  global=`du $h_p $d_p $taille | $s_p `
 	else 
-	  global=`du $h_p $d_p $taille`
+	  global=`du $h_p $d_p $taille `
+	fi
+
+	#GREP
+	
+
+	#SAVE
+	
+	if [[ $@ == *"-o"* ]]; 
+	then
+	  echo "$global" > $o_p ;
+	  cat $o_p ;
 	fi
 
 
