@@ -163,7 +163,7 @@ parameter () {
 	taille="--max-depth=2"
 	global="no value for"
 
-	while getopts "d:fahsro:" OPT; do
+	while getopts "d:fahsr:o:" OPT; do
 
 	# Je récupère le texte associé à l'option
 	case "${OPT}" in
@@ -181,11 +181,13 @@ parameter () {
             #s_v=${OPTARG} # Tri par ordre decroissant
 	    s_p="sort -hr "  
 	    local=`du $d_p $h_p $taille | sort -nr `
-	    echo "je rentre dans s"
 	    ;;
 	
 	r)
-            r_p=${OPTARG};; # utilise un regex
+            r_p="${OPTARG}" # utilise un regex
+	    echo "$r_p" 
+	    echo "je viens de mettre la valeur du regex"
+	    ;;
 	f)
             f_p="-a";; # On cible egalement les fichiers
 	a)
@@ -197,7 +199,6 @@ parameter () {
 	#TEST 
 	    o_p=${OPTARG}	
 	    echo "$o_p"
-	    echo "je suis la aussi" 
 	    ;;
         *)
             fourth="Error: ${OPT} is not acceptable";; # argument pas acceptanel
@@ -208,25 +209,51 @@ parameter () {
 
 	## IL faut tout faire a la fin comme ca je peux faire une grande commande
 
-	
+	# JE VAIS METTRE LE REGEX DEDANS TOUT SIMPLEMENT	
 
 	#SORT AND
 	if [[ $@ == *"-s"* ]]; 
 	then
-	  global=`du $h_p $d_p $taille | $s_p `
+	#ON CHECK LE REGEX 
+	  if [[ $@ == *"-r"* ]]; 
+	  then
+	    #COMMANDE A METTRE
+	    global=`du $h_p $d_p $taille | $s_p | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
+	  else 
+	    #COMMANDE A METTRE
+	    global=`du $h_p $d_p $taille | $s_p` # PAS DE REGEX
+	  fi
+
+	  #global=`du $h_p $d_p $taille | $s_p ` ## COMMANDE DE DEPART
+
+	## PAS DE SORT PAS BESOIN DE TRIER
 	else 
-	  global=`du $h_p $d_p $taille `
+	  if [[ $@ == *"-r"* ]]; 
+	  then
+	    #COMMANDE A METTRE
+	    global=`du $h_p $d_p $taille | grep $r_p` # ON CONTIENT LE REGEX ON ENLEVE
+	  else 
+	    #COMMANDE A METTRE
+	    global=`du $h_p $d_p $taille` # PAS DE REGEX
+	  fi
+	  #global=`du $h_p $d_p $taille ` ## COMMANDE DE DEPART
 	fi
 
-	#GREP
-	
+
+	#REGEX GREP 
+	#if [[ $@ == *"-r"* ]]; 
+	#then
+	#  global=`$global | grep $r_p`
+	#fi
+
+
 
 	#SAVE
 	
 	if [[ $@ == *"-o"* ]]; 
 	then
 	  echo "$global" > $o_p ;
-	  cat $o_p ;
+	  # cat $o_p ;
 	fi
 
 
@@ -245,7 +272,13 @@ parameter () {
 
 }
 
-parameter -s -d $path -h ;
+parameter -s -d $path -h -o here.txt -r "Projet" ;
+
+
+# sudo apt-get install pv COMMANDE A FAIRE POUR INSTALLER PV
+
+#TEST 
+
 
 
 # du -ckh  pour afficher la taille de tous les sous dossiers/fichiers directs 
