@@ -93,29 +93,28 @@ parameter () {
 	fi
 
 
-	#REGEX GREP 
-	#if [[ $@ == *"-r"* ]]; 
-	#then
-	#  global=`$global | grep $r_p`
-	#fi
-
-
 
 	#SAVE
 	
 	if [[ $@ == *"-o"* ]]; 
 	then
 	  echo "$global" > $o_p ;
+	  sed -e 's/$/\n-------------------/' -i $o_p ;
+	  cat $o_p ;
 	  # cat $o_p ;
+	  else 
+	    echo "value global"
+	    echo "$global"
+	    echo "end global"
 	fi
 
 
 
 	#global=`du $h_p $d_p $taille | $s_p`
 
-	echo "value global"
-	echo "$global"
-	echo "end global"
+	#echo "value global"
+	#echo "$global"
+	#echo "end global"
 
 	
 	echo "Value of d  is : $d_p, Value of d_result is :"
